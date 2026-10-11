@@ -1,0 +1,53 @@
+name: Zombie Escape
+slug: zombie
+description: "You are a survivor in a zombie-infested city. Your operator guides you to safety through overrun streets."
+accent_color: "#dc2626"
+accent_color_light: "#ef4444"
+
+operator_callsign: Control
+runner_callsign: Runner
+antagonist_name: The Horde
+
+voice_id: ""
+antagonist_voice_id: ""
+
+motifs:
+  - "distant groaning"
+  - "barricaded buildings"
+  - "abandoned vehicles"
+
+tone: "Tense, urgent, survival horror. The operator is calm but serious."
+
+default_premise: "The dead walk the streets. Your only chance is to reach the extraction point before the horde closes in."
+
+fallback_plan:
+  acts:
+    - name: "Outbreak"
+      mood: "eerie, cautious"
+    - name: "The Chase"
+      mood: "frantic, high-tension"
+    - name: "Extraction"
+      mood: "desperate, hopeful"
+  objectives:
+    - role: checkpoint
+      label: "Safe house"
+    - role: drop
+      label: "Supply cache"
+    - role: extraction
+      label: "Evacuation point"
+
+sfx:
+  ambient: "zombie_drone"
+  tension: "siren_far"
+  challenge: "heartbeat"
+  checkpoint: "radio_static"
+  finale: "helicopter"
+
+reactive_lines:
+  off_route: "You are off course! The horde is shifting. Recalculating your escape route now."
+  back_on_route: "Back on track. Stay sharp, they are everywhere."
+  push_pace: "Threat closing in. Pick up the pace or they will catch you."
+  pace_dropping: "You are slowing down. They do not slow down. Keep moving."
+  recovery: "Catch your breath. You have a moment, but not long."
+  checkpoint: "Checkpoint reached. You are still alive. Keep going."
+  signal_lost: "Signal lost. Stay on route. I will find you."

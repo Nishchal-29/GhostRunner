@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GhostRunner // Tactical Generative Audio Drama</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="/static/style.css?v=2" />
+</head>
+<body class="theme-cyberpunk">
+  <div id="app">
+    <!-- Header -->
+    <header class="tactical-header">
+      <div class="brand-group">
+        <div class="brand-logo">
+          <div class="brand-icon">G</div>
+          <span class="brand-title">GhostRunner</span>
+        </div>
+        <div class="system-badge">
+          <span class="pulse-dot"></span>
+          <span id="sysStatus">ENGINE ONLINE</span>
+        </div>
+      </div>
+
+      <div class="header-status">
+        <div class="location-pill" id="locationPill">
+          <span>📍</span>
+          <span id="currentLocLabel">Times Square, NYC (40.7580, -73.9855)</span>
+        </div>
+        <button class="btn-new-mission" id="btnOpenSetup">
+          <span>⚡</span>
+          <span>New Mission</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Map Viewport -->
+    <main class="viewport">
+      <div id="map"></div>
+
+      <!-- Left Floating Telemetry HUD -->
+      <aside class="hud-telemetry" id="hudTelemetry">
+        <div class="hud-card-header">
+          <span class="hud-label">Tactical HUD</span>
+          <span class="genre-tag" id="hudGenreTag">Cyberpunk</span>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-box wide">
+            <span class="metric-title">Target Distance</span>
+            <div class="metric-value">
+              <span id="hudCoveredDist">0.00</span>
+              <small>/ <span id="hudTotalDist">2.50</span> km</small>
+            </div>
+          </div>
+          <div class="metric-box">
+            <span class="metric-title">Runner Pace</span>
+            <div class="metric-value">
+              <span id="hudPace">5:12</span>
+              <small>/km</small>
+            </div>
+          </div>
+          <div class="metric-box">
+            <span class="metric-title">Speed</span>
+            <div class="metric-value">
+              <span id="hudSpeed">3.2</span>
+              <small>m/s</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+          <div class="progress-header">
+            <span>Route Progress</span>
+            <span id="hudProgressPercent">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="hudProgressBar"></div>
+          </div>
+        </div>
+
+        <!-- Next Maneuver HUD Card -->
+        <div class="next-turn-card" id="nextTurnCard">
+          <div class="turn-icon-box" id="turnIcon">⮡</div>
+          <div class="turn-details">
+            <span class="turn-distance" id="turnDist">In 60m</span>
+            <span class="turn-instruction" id="turnInstruction">Follow route</span>
+          </div>
+        </div>
+
+        <!-- Simulation Speed Controls -->
+        <div class="sim-controls">
+          <button class="btn-ctrl" id="btnToggleSim">⏸ Pause</button>
+          <div class="speed-chips">
+            <button class="btn-ctrl active" data-speed="1.0">1x</button>
+            <button class="btn-ctrl" data-speed="2.5">2.5x</button>
+            <button class="btn-ctrl" data-speed="5.0">5x</button>
+            <button class="btn-ctrl" data-speed="10.0">10x</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Bottom Dispatcher Communications Deck -->
+      <footer class="comms-deck" id="commsDeck">
+        <div class="comms-top-bar">
+          <div class="operator-id">
+            <span>📻</span>
+            <span id="operatorCallsign">DISPATCH // SECURE FREQ 142.8 MHz</span>
+            <canvas class="radio-wave-canvas" id="radioCanvas"></canvas>
+          </div>
+          <div class="comms-actions">
+            <button class="btn-comms-tool" id="btnReplayAudio" title="Replay last radio line">
+              <span>🔄</span> Replay
+            </button>
+            <button class="btn-comms-tool" id="btnMuteToggle" title="Toggle audio voice">
+              <span id="muteIcon">🔊</span> Audio
+            </button>
+            <button class="btn-comms-tool" id="btnToggleHistory" title="View transmission log">
+              <span>📋</span> Comms Log (<span id="commsCount">0</span>)
+            </button>
+          </div>
+        </div>
+
+        <div class="transmission-box">
+          <div class="transmission-text" id="transmissionText">
+            "Radio link calibrated. Runner position locked. Stand by for tactical guidance..."
+          </div>
+          <div class="transmission-meta" id="transmissionMeta">
+            TRANSMISSION ID: INIT // CHANNEL SECURE
+          </div>
+        </div>
+      </footer>
+
+      <!-- History Drawer -->
+      <div class="history-drawer hidden" id="historyDrawer"></div>
+    </main>
+
+    <!-- Mission Setup Modal Overlay -->
+    <div class="modal-overlay" id="setupModal">
+      <div class="setup-card">
+        <div class="setup-header">
+          <div>
+            <h2 class="setup-title">Mission Briefing</h2>
+            <p class="setup-subtitle">Configure your real-world running route and narrative genre.</p>
+          </div>
+          <button class="btn-close-modal" id="btnCloseModal" style="display:none;">✕</button>
+        </div>
+
+        <!-- Location Selection -->
+        <div>
+          <div class="setup-section-title">
+            <span>📍</span> 1. Set Runner Location
+          </div>
+          <div class="location-options">
+            <button class="btn-loc" id="btnUseGps">
+              <span>📡</span> Use My GPS Location
+            </button>
+            <button class="btn-loc" id="btnSelectOnMap">
+              <span>🎯</span> Click Point on Map
+            </button>
+          </div>
+          <div class="presets-container" id="presetsList">
+            <!-- Dynamically populated presets -->
+          </div>
+        </div>
+
+        <!-- Genre Selection -->
+        <div>
+          <div class="setup-section-title">
+            <span>🎭</span> 2. Choose Narrative Genre
+          </div>
+          <div class="genre-cards">
+            <div class="genre-card active" data-genre="cyberpunk">
+              <span class="genre-icon">⚡</span>
+              <span class="genre-name">Cyberpunk Courier</span>
+              <p class="genre-desc">Transport an encrypted data chip. Evade CorpSec drone patrols.</p>
+            </div>
+            <div class="genre-card" data-genre="zombie">
+              <span class="genre-icon">☣️</span>
+              <span class="genre-name">Zombie Escape</span>
+              <p class="genre-desc">Overrun city streets. Outrun the horde to the extraction safehouse.</p>
+            </div>
+            <div class="genre-card" data-genre="spy">
+              <span class="genre-icon">🕶️</span>
+              <span class="genre-name">Spy Exfiltration</span>
+              <p class="genre-desc">Cover blown. Your handler guides you past counter-intel surveillance.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Target Distance Slider -->
+        <div>
+          <div class="distance-row">
+            <span class="setup-section-title" style="margin-bottom:0;">
+              <span>🏃</span> 3. Target Route Distance
+            </span>
+            <span class="distance-val" id="distanceDisplay">2.5 km</span>
+          </div>
+          <input
+            type="range"
+            id="distanceSlider"
+            class="tactical-range"
+            min="1000"
+            max="6000"
+            step="250"
+            value="2500"
+          />
+        </div>
+
+        <!-- Launch Button & Live Compilation Progress -->
+        <button class="btn-deploy" id="btnDeployMission">
+          <span>🚀</span>
+          <span>Deploy Mission</span>
+        </button>
+
+        <div class="loading-steps hidden" id="loadingSteps">
+          <div class="loading-step-item" id="step1">⭘ Calibrating road network loop (Valhalla)...</div>
+          <div class="loading-step-item" id="step2">⭘ Scanning OpenStreetMap landmarks...</div>
+          <div class="loading-step-item" id="step3">⭘ Drafting tactical narrative beats (Ollama LLM)...</div>
+          <div class="loading-step-item" id="step4">⭘ Synthesizing radio voice transmission...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden HTML5 Audio Element -->
+    <audio id="audioPlayer" preload="auto"></audio>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/static/app.js?v=2"></script>
+</body>
+</html>

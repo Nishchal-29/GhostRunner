@@ -1,0 +1,53 @@
+name: Cyberpunk Courier
+slug: cyberpunk
+description: "You are an underground courier in a neon-lit megacity. Deliver the package before the corps find you."
+accent_color: "#06b6d4"
+accent_color_light: "#22d3ee"
+
+operator_callsign: Dispatch
+runner_callsign: Courier
+antagonist_name: CorpSec
+
+voice_id: ""
+antagonist_voice_id: ""
+
+motifs:
+  - "neon reflections"
+  - "hacked billboards"
+  - "drone patrols"
+
+tone: "Slick, cybernoir, fast-paced. The dispatcher is streetwise and laconic."
+
+default_premise: "You have a data chip worth millions. Half the city wants it. Get it to the drop before CorpSec locks down the district."
+
+fallback_plan:
+  acts:
+    - name: "The Job"
+      mood: "cool, professional"
+    - name: "Compromised"
+      mood: "urgent, hunted"
+    - name: "The Drop"
+      mood: "tense, triumphant"
+  objectives:
+    - role: checkpoint
+      label: "Dead drop relay"
+    - role: drop
+      label: "Data cache"
+    - role: extraction
+      label: "Final delivery point"
+
+sfx:
+  ambient: "synth_drone"
+  tension: "digital_alarm"
+  challenge: "heartbeat"
+  checkpoint: "data_chime"
+  finale: "synth_stinger"
+
+reactive_lines:
+  off_route: "Off grid. CorpSec drones are scanning. Recalculating your route."
+  back_on_route: "Back on the network. Keep moving, courier."
+  push_pace: "CorpSec patrol incoming. Move faster or get flatlined."
+  pace_dropping: "Pace dropping. The net is closing. Push it."
+  recovery: "Clear zone. Cycle your coolant and prep for the next leg."
+  checkpoint: "Relay point reached. Package integrity confirmed."
+  signal_lost: "Signal scrambled. Maintain heading. Reconnecting."

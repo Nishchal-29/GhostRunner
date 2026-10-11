@@ -1,0 +1,33 @@
+# GhostRunner local infrastructure
+# Postgres runs natively; this file is for Valhalla only.
+# Usage: docker compose up -d
+
+services:
+  valhalla:
+    image: ghcr.io/gis-ops/docker-valhalla/valhalla:latest
+    container_name: ghostrunner-valhalla
+    ports:
+      - "8002:8002"
+    volumes:
+      - valhalla_data:/custom_files
+    environment:
+      # Download a small OSM extract covering NYC (Manhattan area for demo)
+      tile_urls: "https://download.geofabrik.de/north-america/us/new-york-latest.osm.pbf"
+      serve_tiles: "True"
+      build_admins: "True"
+      build_time_zones: "True"
+      build_elevation: "False"
+      # Force rebuild only if tiles don't exist
+      force_rebuild: "False"
+      # Server config
+      server_threads: "2"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 3600s
+
+volumes:
+  valhalla_data:

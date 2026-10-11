@@ -1,0 +1,53 @@
+name: Spy Exfiltration
+slug: spy
+description: "You are a field agent extracting from hostile territory. Your handler guides you to the safe house."
+accent_color: "#d97706"
+accent_color_light: "#f59e0b"
+
+operator_callsign: Handler
+runner_callsign: Agent
+antagonist_name: Counter-Intel
+
+voice_id: ""
+antagonist_voice_id: ""
+
+motifs:
+  - "surveillance cameras"
+  - "unmarked sedans"
+  - "coded signals"
+
+tone: "Cool, measured, professional espionage. The handler is precise and unflappable."
+
+default_premise: "Your cover is blown. Counter-intelligence is sweeping the district. Reach the safe house before they close the net."
+
+fallback_plan:
+  acts:
+    - name: "Blown"
+      mood: "tense, controlled"
+    - name: "Evasion"
+      mood: "tactical, cat-and-mouse"
+    - name: "Safe House"
+      mood: "urgent, relief"
+  objectives:
+    - role: checkpoint
+      label: "Signal post"
+    - role: drop
+      label: "Dead drop"
+    - role: extraction
+      label: "Safe house"
+
+sfx:
+  ambient: "spy_drone"
+  tension: "radio_intercept"
+  challenge: "heartbeat"
+  checkpoint: "coded_beep"
+  finale: "door_lock"
+
+reactive_lines:
+  off_route: "You are deviating from the planned route. Counter-intel may have eyes on you. Recalculating."
+  back_on_route: "Back on route. Maintain your cover."
+  push_pace: "Surveillance team closing. Increase pace, agent."
+  pace_dropping: "You are losing ground. They will not wait. Move."
+  recovery: "Clear for now. Regulate your breathing and stay ready."
+  checkpoint: "Signal post confirmed. Handler acknowledges."
+  signal_lost: "Comms dark. Follow the last bearing. I will reacquire."

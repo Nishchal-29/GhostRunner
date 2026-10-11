@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Times Square",
+    "kind": "tourism",
+    "lat": 40.7580,
+    "lon": -73.9855
+  },
+  {
+    "name": "Bryant Park",
+    "kind": "leisure",
+    "lat": 40.7536,
+    "lon": -73.9832
+  },
+  {
+    "name": "New York Public Library",
+    "kind": "historic",
+    "lat": 40.7532,
+    "lon": -73.9822
+  },
+  {
+    "name": "Grand Central Terminal",
+    "kind": "historic",
+    "lat": 40.7527,
+    "lon": -73.9772
+  },
+  {
+    "name": "Rockefeller Center",
+    "kind": "tourism",
+    "lat": 40.7587,
+    "lon": -73.9787
+  }
+]
